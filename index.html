@@ -11,8 +11,15 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- 스크린 리더 알림 영역 (접근성) -->
+    <div id="a11y-status" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <div id="a11y-announce" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+
+    <!-- 컨텐츠 바로가기 링크 -->
+    <a href="#app" class="skip-link">본문으로 바로가기</a>
+
     <!-- 언어 선택기 -->
-    <div class="language-selector">
+    <div class="language-selector" role="navigation" aria-label="언어 선택">
         <button onclick="changeLanguage('ko')" class="lang-btn active" id="lang-ko" aria-label="한국어">🇰🇷</button>
         <button onclick="changeLanguage('en')" class="lang-btn" id="lang-en" aria-label="English">🇺🇸</button>
         <button onclick="changeLanguage('zh')" class="lang-btn" id="lang-zh" aria-label="中文">🇨🇳</button>
@@ -116,10 +123,10 @@
                 </div>
 
                 <div class="guide-box" id="guide-box">
-                    <button class="guide-toggle" onclick="toggleGuide()">
-                        💭 질문 가이드 <span id="guide-arrow">▼</span>
+                    <button class="guide-toggle" onclick="toggleGuide()" aria-expanded="false" aria-controls="guide-content">
+                        💭 질문 가이드 <span id="guide-arrow" aria-hidden="true">▼</span>
                     </button>
-                    <div class="guide-content" id="guide-content">
+                    <div class="guide-content" id="guide-content" role="region" aria-label="질문 가이드">
                         <!-- 질문 가이드가 여기에 표시됨 -->
                     </div>
                 </div>
@@ -153,21 +160,21 @@
                     </div>
                 </div>
 
-                <div class="letter-paper">
+                <div class="letter-paper" role="form" aria-label="감사 편지 작성">
                     <div class="letter-field">
-                        <label>To.</label>
-                        <input type="text" id="letter-to" placeholder="받는 사람">
+                        <label for="letter-to">To.</label>
+                        <input type="text" id="letter-to" placeholder="받는 사람" aria-required="true">
                     </div>
                     <div class="letter-field">
-                        <label>고마웠던 일</label>
-                        <textarea id="letter-content" placeholder="어떤 일이 고마웠나요?"></textarea>
+                        <label for="letter-content">고마웠던 일</label>
+                        <textarea id="letter-content" placeholder="어떤 일이 고마웠나요?" aria-required="true"></textarea>
                     </div>
                     <div class="letter-field">
-                        <label>그때 내 마음</label>
+                        <label for="letter-feeling">그때 내 마음</label>
                         <textarea id="letter-feeling" placeholder="그때 어떤 기분이었나요?"></textarea>
                     </div>
                     <div class="letter-field">
-                        <label>앞으로의 다짐</label>
+                        <label for="letter-promise">앞으로의 다짐</label>
                         <textarea id="letter-promise" placeholder="앞으로 어떻게 하고 싶나요?"></textarea>
                     </div>
                     <div class="letter-from">

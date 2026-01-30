@@ -81,6 +81,42 @@ const categoryInfo = {
 // 현재 선택된 카테고리
 let currentCategory = '';
 
+// ==================== 접근성 유틸리티 ====================
+// 스크린 리더 알림 함수
+function announceToScreenReader(message, priority = 'polite') {
+    const announcerId = priority === 'assertive' ? 'a11y-announce' : 'a11y-status';
+    let announcer = document.getElementById(announcerId);
+
+    // 알림 요소가 없으면 생성
+    if (!announcer) {
+        announcer = document.createElement('div');
+        announcer.id = announcerId;
+        announcer.setAttribute('aria-live', priority);
+        announcer.setAttribute('aria-atomic', 'true');
+        announcer.className = 'sr-only';
+        document.body.appendChild(announcer);
+    }
+
+    // 메시지 설정 (변경 감지를 위해 빈 문자열로 먼저 설정)
+    announcer.textContent = '';
+    setTimeout(() => {
+        announcer.textContent = message;
+    }, 100);
+}
+
+// 화면 제목 가져오기 (스크린 리더용)
+function getScreenTitle(screenId) {
+    const titles = {
+        'screen-start': t('start_title') || '돌아봄 시작',
+        'screen-name': t('name_greeting') || '이름 입력',
+        'screen-hub': (appData.userName || '친구') + '의 돌아봄',
+        'screen-category': categoryInfo[currentCategory]?.title || '카테고리',
+        'screen-letter': t('letter_title') || '감사 편지',
+        'screen-result': (appData.userName || '친구') + t('result_title') || '결과 화면'
+    };
+    return titles[screenId] || '화면';
+}
+
 // ==================== 초기화 ====================
 document.addEventListener('DOMContentLoaded', function() {
     // 다국어 초기화
@@ -121,7 +157,8 @@ function goToScreen(screenId) {
     });
 
     // 선택한 화면 표시
-    document.getElementById(screenId).classList.add('active');
+    const targetScreen = document.getElementById(screenId);
+    targetScreen.classList.add('active');
 
     // 화면별 초기화
     if (screenId === 'screen-hub') {
@@ -134,6 +171,22 @@ function goToScreen(screenId) {
 
     // 스크롤 맨 위로
     window.scrollTo(0, 0);
+
+    // 접근성: 포커스 관리
+    setTimeout(() => {
+        // 화면 내 첫 번째 포커스 가능한 요소 또는 제목에 포커스
+        const focusTarget = targetScreen.querySelector('h1, h2, [autofocus], input:not([type="hidden"]), button.btn-primary');
+        if (focusTarget) {
+            // 제목 요소는 tabindex 추가하여 포커스 가능하게
+            if (focusTarget.tagName === 'H1' || focusTarget.tagName === 'H2') {
+                focusTarget.setAttribute('tabindex', '-1');
+            }
+            focusTarget.focus();
+        }
+    }, 100);
+
+    // 접근성: 스크린 리더에 화면 전환 알림
+    announceToScreenReader(getScreenTitle(screenId) + ' 화면으로 이동했습니다');
 }
 
 // ==================== UI 업데이트 ====================
@@ -238,9 +291,16 @@ function openCategory(category) {
 function toggleGuide() {
     const content = document.getElementById('guide-content');
     const arrow = document.getElementById('guide-arrow');
+    const button = document.querySelector('.guide-toggle');
 
     content.classList.toggle('open');
-    arrow.textContent = content.classList.contains('open') ? '▲' : '▼';
+    const isOpen = content.classList.contains('open');
+    arrow.textContent = isOpen ? '▲' : '▼';
+
+    // 접근성: aria-expanded 업데이트
+    if (button) {
+        button.setAttribute('aria-expanded', isOpen.toString());
+    }
 }
 
 // 입력 항목 렌더링
