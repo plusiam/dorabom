@@ -1036,6 +1036,45 @@ body {
     transform: translateY(-2px);
 }
 
+/* 저장 공간 정보 */
+.storage-info {
+    margin: 24px 0;
+    padding: 16px;
+    background: var(--bg-light);
+    border-radius: 12px;
+    text-align: center;
+}
+
+.storage-indicator {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    margin: 0 0 8px 0;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.storage-indicator.storage-warning {
+    color: #ff9500;
+    font-weight: 700;
+}
+
+.storage-indicator.storage-critical {
+    color: #ff3b30;
+    font-weight: 700;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.storage-hint {
+    font-size: 13px;
+    color: var(--text-light);
+    margin: 0;
+}
+
 /* ========================================
    반응형
    ======================================== */

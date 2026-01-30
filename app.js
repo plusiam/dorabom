@@ -149,6 +149,66 @@ function saveData() {
     localStorage.setItem('dorabom-data', JSON.stringify(appData));
 }
 
+// 안전한 데이터 저장 (에러 핸들링 포함)
+function saveDataSafe() {
+    try {
+        const dataString = JSON.stringify(appData);
+        localStorage.setItem('dorabom-data', dataString);
+        return true;
+    } catch (error) {
+        if (error.name === 'QuotaExceededError') {
+            console.error('LocalStorage 용량 초과:', error);
+            // 사용자에게 알림
+            const usage = getStorageUsage();
+            console.warn(`현재 저장 공간: ${usage.usedMB.toFixed(2)}MB / ${usage.limitMB}MB`);
+            return false;
+        } else {
+            console.error('데이터 저장 실패:', error);
+            return false;
+        }
+    }
+}
+
+// 저장 공간 사용량 확인
+function getStorageUsage() {
+    let totalSize = 0;
+    for (let key in localStorage) {
+        if (localStorage.hasOwnProperty(key)) {
+            totalSize += localStorage[key].length + key.length;
+        }
+    }
+
+    // 브라우저별 LocalStorage 한계 (대부분 5-10MB)
+    const estimatedLimit = 5; // MB
+    const usedMB = (totalSize * 2) / (1024 * 1024); // UTF-16 → 바이트 변환
+
+    return {
+        usedMB: usedMB,
+        limitMB: estimatedLimit,
+        usagePercent: Math.round((usedMB / estimatedLimit) * 100),
+        available: estimatedLimit - usedMB
+    };
+}
+
+// 저장 공간 표시 업데이트
+function updateStorageIndicator() {
+    const indicator = document.getElementById('storage-indicator');
+    if (!indicator) return;
+
+    const usage = getStorageUsage();
+    const percent = usage.usagePercent;
+
+    indicator.textContent = `💾 ${usage.usedMB.toFixed(1)}MB / ${usage.limitMB}MB (${percent}%)`;
+
+    // 경고 레벨 설정
+    indicator.className = 'storage-indicator';
+    if (percent >= 90) {
+        indicator.classList.add('storage-critical');
+    } else if (percent >= 80) {
+        indicator.classList.add('storage-warning');
+    }
+}
+
 // ==================== 화면 전환 ====================
 function goToScreen(screenId) {
     // 모든 화면 숨기기
@@ -461,6 +521,9 @@ function renderResult() {
     }
 
     container.innerHTML = html;
+
+    // 저장 공간 표시 업데이트
+    updateStorageIndicator();
 }
 
 // ==================== 저장 기능 ====================
@@ -632,10 +695,78 @@ function getDateString() {
 }
 
 // ==================== 이미지 관리 ====================
+
+// 이미지 압축 함수
+async function compressImage(file, maxWidth = 800, maxHeight = 800, quality = 0.7) {
+    return new Promise((resolve, reject) => {
+        // 파일 크기 체크 (5MB 이상)
+        if (file.size > 5 * 1024 * 1024) {
+            console.warn(`큰 이미지 감지 (${(file.size / 1024 / 1024).toFixed(2)}MB). 압축을 진행합니다.`);
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                // 캔버스 생성
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // 비율 유지하면서 크기 조정
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width = Math.round((width * maxHeight) / height);
+                        height = maxHeight;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+
+                // 고품질 리샘플링
+                const ctx = canvas.getContext('2d');
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // JPEG로 압축 (품질 0.7)
+                canvas.toBlob((blob) => {
+                    if (!blob) {
+                        reject(new Error('이미지 압축 실패'));
+                        return;
+                    }
+
+                    const originalSize = file.size / 1024 / 1024;
+                    const compressedSize = blob.size / 1024 / 1024;
+                    console.log(`압축 완료: ${originalSize.toFixed(2)}MB → ${compressedSize.toFixed(2)}MB (${((1 - blob.size/file.size) * 100).toFixed(1)}% 감소)`);
+
+                    // Blob을 Base64로 변환
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        resolve(reader.result);
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
+                }, 'image/jpeg', quality);
+            };
+            img.onerror = () => reject(new Error('이미지 로드 실패'));
+            img.src = e.target.result;
+        };
+        reader.onerror = () => reject(new Error('파일 읽기 실패'));
+        reader.readAsDataURL(file);
+    });
+}
+
 // 이미지 업로드
-function uploadImage() {
+async function uploadImage() {
     if (appData.images.length >= 5) {
-        alert('최대 5장까지 업로드할 수 있어요!');
+        alert(t('alert_max_images'));
         return;
     }
 
@@ -643,28 +774,36 @@ function uploadImage() {
     input.type = 'file';
     input.accept = 'image/*';
 
-    input.onchange = (e) => {
+    input.onchange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
-        // 파일 크기 체크 (5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            alert('이미지 크기는 5MB 이하여야 합니다.');
-            return;
-        }
+        try {
+            // 이미지 압축 적용 (800x800, 품질 0.7)
+            const compressedDataUrl = await compressImage(file, 800, 800, 0.7);
 
-        const reader = new FileReader();
-        reader.onload = (event) => {
             const imageData = {
                 id: Date.now(),
-                data: event.target.result,
+                data: compressedDataUrl,
                 name: file.name
             };
+
             appData.images.push(imageData);
-            saveData();
-            renderImages();
-        };
-        reader.readAsDataURL(file);
+
+            // 안전한 저장 (에러 핸들링 포함)
+            const saved = saveDataSafe();
+            if (saved) {
+                renderImages();
+                announceToScreenReader(t('images_add') + ' ' + file.name);
+            } else {
+                // 저장 실패 시 이미지 제거
+                appData.images.pop();
+                alert('저장 공간이 부족합니다. 다른 사진을 삭제하거나 용량을 줄여주세요.');
+            }
+        } catch (error) {
+            console.error('이미지 업로드 실패:', error);
+            alert('이미지 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+        }
     };
 
     input.click();
@@ -695,6 +834,11 @@ function renderImages() {
             <button class="image-delete" onclick="deleteImage(${img.id})">×</button>
         </div>
     `).join('');
+
+    // 저장 공간 표시 업데이트 (결과 화면에 있을 때)
+    if (document.getElementById('storage-indicator')) {
+        updateStorageIndicator();
+    }
 }
 
 // ==================== 데이터 백업/복원 ====================
