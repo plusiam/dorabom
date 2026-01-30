@@ -20,6 +20,7 @@ let appData = {
         feeling: '',
         promise: ''
     },
+    images: [],        // 추억 사진 (Base64)
     completedCategories: []
 };
 
@@ -82,6 +83,11 @@ let currentCategory = '';
 
 // ==================== 초기화 ====================
 document.addEventListener('DOMContentLoaded', function() {
+    // 다국어 초기화
+    if (typeof initI18n === 'function') {
+        initI18n();
+    }
+
     loadData();
     updateUI();
 
@@ -171,12 +177,21 @@ function updateHubUI() {
     document.getElementById('progress-count').textContent = completedCount;
     document.getElementById('progress-fill').style.width = (completedCount / 5 * 100) + '%';
 
+    // ARIA 속성 업데이트
+    const progressBar = document.querySelector('.progress-bar');
+    if (progressBar) {
+        progressBar.setAttribute('aria-valuenow', completedCount);
+        progressBar.setAttribute('aria-label', `5개 카테고리 중 ${completedCount}개 완료`);
+    }
+
     // 5개 완료 시 편지 버튼 활성화
     const letterBtn = document.getElementById('btn-letter');
     if (completedCount >= 5) {
         letterBtn.disabled = false;
+        letterBtn.setAttribute('aria-disabled', 'false');
     } else {
         letterBtn.disabled = true;
+        letterBtn.setAttribute('aria-disabled', 'true');
     }
 }
 
@@ -304,6 +319,7 @@ function loadLetterData() {
     document.getElementById('letter-feeling').value = appData.letter.feeling || '';
     document.getElementById('letter-promise').value = appData.letter.promise || '';
     document.getElementById('letter-from-name').textContent = appData.userName || '친구';
+    renderImages();
 }
 
 // 편지 저장
@@ -349,6 +365,20 @@ function renderResult() {
             `;
         }
     });
+
+    // 추억 사진 렌더링
+    if (appData.images && appData.images.length > 0) {
+        html += `
+            <div class="result-section">
+                <div class="result-section-title">
+                    <span>📸</span> 추억 사진
+                </div>
+                <div class="result-images">
+                    ${appData.images.map(img => `<img src="${img.data}" alt="${escapeHtml(img.name)}">`).join('')}
+                </div>
+            </div>
+        `;
+    }
 
     // 편지 렌더링
     if (appData.letter.to) {
@@ -478,6 +508,20 @@ function createCaptureHTML() {
         }
     });
 
+    // 추억 사진
+    if (appData.images && appData.images.length > 0) {
+        sectionsHTML += `
+            <div class="capture-section">
+                <div class="capture-section-title">
+                    <span>📸</span> 추억 사진
+                </div>
+                <div class="capture-images">
+                    ${appData.images.map(img => `<img src="${img.data}" alt="${escapeHtml(img.name)}" style="max-width: 200px; margin: 8px; border-radius: 8px;">`).join('')}
+                </div>
+            </div>
+        `;
+    }
+
     // 편지
     if (appData.letter.to) {
         sectionsHTML += `
@@ -527,6 +571,131 @@ function getDateString() {
     return `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
 }
 
+// ==================== 이미지 관리 ====================
+// 이미지 업로드
+function uploadImage() {
+    if (appData.images.length >= 5) {
+        alert('최대 5장까지 업로드할 수 있어요!');
+        return;
+    }
+
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // 파일 크기 체크 (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('이미지 크기는 5MB 이하여야 합니다.');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const imageData = {
+                id: Date.now(),
+                data: event.target.result,
+                name: file.name
+            };
+            appData.images.push(imageData);
+            saveData();
+            renderImages();
+        };
+        reader.readAsDataURL(file);
+    };
+
+    input.click();
+}
+
+// 이미지 삭제
+function deleteImage(id) {
+    if (confirm('이 사진을 삭제하시겠어요?')) {
+        appData.images = appData.images.filter(img => img.id !== id);
+        saveData();
+        renderImages();
+    }
+}
+
+// 이미지 렌더링
+function renderImages() {
+    const container = document.getElementById('images-container');
+    if (!container) return;
+
+    if (appData.images.length === 0) {
+        container.innerHTML = '<p class="no-images">아직 사진이 없어요. 추억 사진을 추가해보세요!</p>';
+        return;
+    }
+
+    container.innerHTML = appData.images.map(img => `
+        <div class="image-item">
+            <img src="${img.data}" alt="${escapeHtml(img.name)}">
+            <button class="image-delete" onclick="deleteImage(${img.id})">×</button>
+        </div>
+    `).join('');
+}
+
+// ==================== 데이터 백업/복원 ====================
+// 데이터를 JSON 파일로 내보내기
+function exportData() {
+    if (!appData.userName) {
+        alert('저장할 데이터가 없습니다.');
+        return;
+    }
+
+    const dataStr = JSON.stringify(appData, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.download = `돌아봄_백업_${appData.userName}_${getDateString()}.json`;
+    link.href = url;
+    link.click();
+
+    URL.revokeObjectURL(url);
+    alert('데이터가 백업되었습니다!\n파일을 안전한 곳에 보관해주세요.');
+}
+
+// JSON 파일에서 데이터 불러오기
+function importData() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const importedData = JSON.parse(event.target.result);
+
+                // 데이터 구조 검증
+                if (!importedData.userName || !importedData.categories) {
+                    throw new Error('올바른 백업 파일이 아닙니다.');
+                }
+
+                if (confirm('불러온 데이터로 현재 데이터를 덮어쓰시겠어요?')) {
+                    appData = importedData;
+                    saveData();
+                    updateUI();
+                    goToScreen('screen-hub');
+                    alert('데이터를 성공적으로 불러왔습니다!');
+                }
+            } catch (error) {
+                console.error('데이터 불러오기 실패:', error);
+                alert('파일을 읽는 중 오류가 발생했습니다.\n올바른 백업 파일인지 확인해주세요.');
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    input.click();
+}
+
 // 모든 데이터 초기화
 function resetAll() {
     if (confirm('정말 처음부터 다시 하시겠어요?\n모든 내용이 지워집니다.')) {
@@ -546,6 +715,7 @@ function resetAll() {
                 feeling: '',
                 promise: ''
             },
+            images: [],
             completedCategories: []
         };
         document.getElementById('user-name').value = '';
