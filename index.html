@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>돌아봄 - 6학년 졸업 감사 리스트</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 화면 1: 시작 화면 -->
+        <section id="screen-start" class="screen active">
+            <div class="container">
+                <div class="logo-area">
+                    <span class="logo-icon">🎓</span>
+                    <h1 class="app-title">돌아봄</h1>
+                    <p class="app-subtitle">초등학교 6년, 감사했던 순간들</p>
+                </div>
+                <div class="intro-text">
+                    <p>버킷리스트가 <strong>앞으로 하고 싶은 것</strong>이라면,</p>
+                    <p>돌아봄은 <strong>지나온 시간에 대한 감사</strong>입니다.</p>
+                </div>
+                <button class="btn btn-primary btn-large" onclick="goToScreen('screen-name')">
+                    시작하기 ✨
+                </button>
+                <div class="decorations">
+                    <span class="deco deco-1">🌸</span>
+                    <span class="deco deco-2">⭐</span>
+                    <span class="deco deco-3">💝</span>
+                    <span class="deco deco-4">🌟</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 화면 2: 이름 입력 -->
+        <section id="screen-name" class="screen">
+            <div class="container">
+                <button class="btn-back" onclick="goToScreen('screen-start')">← 돌아가기</button>
+                <div class="screen-content">
+                    <span class="screen-icon">👋</span>
+                    <h2>안녕! 네 이름을 알려줘</h2>
+                    <div class="input-group">
+                        <input type="text" id="user-name" placeholder="이름을 입력해줘" maxlength="10">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveName()">다음으로</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 화면 3: 카테고리 선택 (메인 허브) -->
+        <section id="screen-hub" class="screen">
+            <div class="container">
+                <div class="hub-header">
+                    <h2><span id="display-name">친구</span>의 돌아봄</h2>
+                    <p class="progress-text">진행률: <span id="progress-count">0</span>/5</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="category-grid">
+                    <button class="category-card" data-category="moment" onclick="openCategory('moment')">
+                        <span class="category-icon">⭐</span>
+                        <span class="category-name">의미 있던 순간</span>
+                        <span class="category-check" id="check-moment">✓</span>
+                    </button>
+                    <button class="category-card" data-category="memory" onclick="openCategory('memory')">
+                        <span class="category-icon">📸</span>
+                        <span class="category-name">소중한 추억</span>
+                        <span class="category-check" id="check-memory">✓</span>
+                    </button>
+                    <button class="category-card" data-category="person" onclick="openCategory('person')">
+                        <span class="category-icon">💝</span>
+                        <span class="category-name">고마웠던 사람</span>
+                        <span class="category-check" id="check-person">✓</span>
+                    </button>
+                    <button class="category-card" data-category="favorite" onclick="openCategory('favorite')">
+                        <span class="category-icon">🌟</span>
+                        <span class="category-name">내가 좋아했던 것</span>
+                        <span class="category-check" id="check-favorite">✓</span>
+                    </button>
+                    <button class="category-card" data-category="future" onclick="openCategory('future')">
+                        <span class="category-icon">🌱</span>
+                        <span class="category-name">앞으로의 다짐</span>
+                        <span class="category-check" id="check-future">✓</span>
+                    </button>
+                </div>
+
+                <button class="btn btn-secondary btn-large" id="btn-letter" onclick="goToScreen('screen-letter')" disabled>
+                    💌 감사 편지 쓰기
+                </button>
+            </div>
+        </section>
+
+        <!-- 화면 4: 카테고리별 입력 -->
+        <section id="screen-category" class="screen">
+            <div class="container">
+                <button class="btn-back" onclick="goToScreen('screen-hub')">← 돌아가기</button>
+
+                <div class="category-header">
+                    <span class="category-icon-large" id="current-category-icon">⭐</span>
+                    <h2 id="current-category-title">의미 있던 순간</h2>
+                </div>
+
+                <div class="guide-box" id="guide-box">
+                    <button class="guide-toggle" onclick="toggleGuide()">
+                        💭 질문 가이드 <span id="guide-arrow">▼</span>
+                    </button>
+                    <div class="guide-content" id="guide-content">
+                        <!-- 질문 가이드가 여기에 표시됨 -->
+                    </div>
+                </div>
+
+                <div class="items-container" id="items-container">
+                    <!-- 입력 항목들이 여기에 추가됨 -->
+                </div>
+
+                <button class="btn btn-add" onclick="addItem()">+ 항목 추가</button>
+
+                <button class="btn btn-primary btn-large" onclick="saveCategory()">저장하고 돌아가기</button>
+            </div>
+        </section>
+
+        <!-- 화면 5: 감사 편지 -->
+        <section id="screen-letter" class="screen">
+            <div class="container">
+                <button class="btn-back" onclick="goToScreen('screen-hub')">← 돌아가기</button>
+
+                <h2>💌 감사 편지</h2>
+                <p class="letter-intro">가장 고마운 사람에게 마음을 전해보세요</p>
+
+                <div class="letter-paper">
+                    <div class="letter-field">
+                        <label>To.</label>
+                        <input type="text" id="letter-to" placeholder="받는 사람">
+                    </div>
+                    <div class="letter-field">
+                        <label>고마웠던 일</label>
+                        <textarea id="letter-content" placeholder="어떤 일이 고마웠나요?"></textarea>
+                    </div>
+                    <div class="letter-field">
+                        <label>그때 내 마음</label>
+                        <textarea id="letter-feeling" placeholder="그때 어떤 기분이었나요?"></textarea>
+                    </div>
+                    <div class="letter-field">
+                        <label>앞으로의 다짐</label>
+                        <textarea id="letter-promise" placeholder="앞으로 어떻게 하고 싶나요?"></textarea>
+                    </div>
+                    <div class="letter-from">
+                        <span>From. <span id="letter-from-name">친구</span></span>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-large" onclick="saveLetter()">편지 완성하기</button>
+            </div>
+        </section>
+
+        <!-- 화면 6: 결과 확인 및 저장 -->
+        <section id="screen-result" class="screen">
+            <div class="container">
+                <div class="result-header">
+                    <h2>🎉 <span id="result-name">친구</span>의 돌아봄</h2>
+                    <p>초등학교 6년간의 감사 기록</p>
+                </div>
+
+                <div class="result-content" id="result-content">
+                    <!-- 결과 내용이 여기에 표시됨 -->
+                </div>
+
+                <div class="result-actions">
+                    <button class="btn btn-primary" onclick="saveAsImage()">📷 이미지로 저장</button>
+                    <button class="btn btn-secondary" onclick="saveAsPDF()">📄 PDF로 저장</button>
+                    <button class="btn btn-outline" onclick="goToScreen('screen-hub')">✏️ 수정하기</button>
+                </div>
+
+                <button class="btn btn-text" onclick="resetAll()">🔄 처음부터 다시 하기</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- 저장용 숨겨진 영역 -->
+    <div id="capture-area" style="position: absolute; left: -9999px;"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

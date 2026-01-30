@@ -1,0 +1,844 @@
+/* ========================================
+   돌아봄 - 6학년 졸업 감사 리스트
+   스타일시트
+   ======================================== */
+
+/* 색상 변수 */
+:root {
+    --primary: #F8B4C8;
+    --primary-dark: #e8a0b5;
+    --secondary: #A8D8EA;
+    --secondary-dark: #8cc8de;
+    --accent: #FFD93D;
+    --background: #FFF9F0;
+    --background-light: #FFFDF8;
+    --text: #4A4A4A;
+    --text-light: #7A7A7A;
+    --white: #FFFFFF;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --shadow-strong: rgba(0, 0, 0, 0.15);
+}
+
+/* 기본 리셋 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* 앱 컨테이너 */
+#app {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--background-light);
+    box-shadow: 0 0 30px var(--shadow);
+}
+
+/* 화면 기본 스타일 */
+.screen {
+    display: none;
+    min-height: 100vh;
+    padding: 24px;
+    animation: fadeIn 0.3s ease;
+}
+
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+    max-width: 100%;
+}
+
+/* ========================================
+   시작 화면
+   ======================================== */
+#screen-start {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(180deg, var(--background-light) 0%, var(--primary) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.logo-area {
+    margin-bottom: 32px;
+}
+
+.logo-icon {
+    font-size: 80px;
+    display: block;
+    margin-bottom: 16px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.app-title {
+    font-family: 'Gaegu', cursive;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.app-subtitle {
+    font-size: 16px;
+    color: var(--text-light);
+}
+
+.intro-text {
+    margin-bottom: 40px;
+    font-size: 15px;
+    line-height: 2;
+}
+
+.intro-text strong {
+    color: var(--primary-dark);
+}
+
+/* 장식 요소 */
+.decorations {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.deco {
+    position: absolute;
+    font-size: 24px;
+    opacity: 0.6;
+    animation: twinkle 2s ease-in-out infinite;
+}
+
+.deco-1 { top: 10%; left: 10%; animation-delay: 0s; }
+.deco-2 { top: 15%; right: 15%; animation-delay: 0.5s; }
+.deco-3 { bottom: 20%; left: 15%; animation-delay: 1s; }
+.deco-4 { bottom: 25%; right: 10%; animation-delay: 1.5s; }
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+/* ========================================
+   버튼 스타일
+   ======================================== */
+.btn {
+    display: inline-block;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: var(--text);
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px var(--shadow-strong);
+}
+
+.btn-secondary {
+    background: var(--secondary);
+    color: var(--text);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: var(--secondary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 2px solid var(--primary);
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+}
+
+.btn-text {
+    background: transparent;
+    color: var(--text-light);
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.btn-text:hover {
+    color: var(--text);
+}
+
+.btn-large {
+    width: 100%;
+    padding: 18px;
+    font-size: 18px;
+    margin-top: 24px;
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 8px 0;
+    margin-bottom: 16px;
+    font-family: inherit;
+}
+
+.btn-back:hover {
+    color: var(--text);
+}
+
+.btn-add {
+    width: 100%;
+    padding: 16px;
+    background: var(--white);
+    border: 2px dashed var(--primary);
+    color: var(--primary-dark);
+    border-radius: 12px;
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+.btn-add:hover {
+    background: var(--primary);
+    color: var(--text);
+    border-style: solid;
+}
+
+/* ========================================
+   이름 입력 화면
+   ======================================== */
+#screen-name .screen-content {
+    text-align: center;
+    padding-top: 60px;
+}
+
+.screen-icon {
+    font-size: 64px;
+    display: block;
+    margin-bottom: 24px;
+}
+
+#screen-name h2 {
+    font-family: 'Gaegu', cursive;
+    font-size: 28px;
+    margin-bottom: 32px;
+}
+
+.input-group {
+    margin-bottom: 24px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 16px 20px;
+    font-size: 18px;
+    border: 2px solid var(--primary);
+    border-radius: 12px;
+    text-align: center;
+    font-family: inherit;
+    background: var(--white);
+    transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-dark);
+}
+
+.input-group input::placeholder {
+    color: #ccc;
+}
+
+/* ========================================
+   메인 허브 (카테고리 선택)
+   ======================================== */
+.hub-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.hub-header h2 {
+    font-family: 'Gaegu', cursive;
+    font-size: 28px;
+    margin-bottom: 16px;
+}
+
+.progress-text {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--white);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px var(--shadow);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    width: 0%;
+}
+
+/* 카테고리 카드 그리드 */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.category-card {
+    background: var(--white);
+    border: none;
+    border-radius: 16px;
+    padding: 24px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 10px var(--shadow);
+    position: relative;
+    font-family: inherit;
+}
+
+.category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px var(--shadow-strong);
+}
+
+.category-card:nth-child(5) {
+    grid-column: span 2;
+}
+
+.category-icon {
+    font-size: 40px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.category-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    display: block;
+}
+
+.category-check {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    border-radius: 50%;
+    font-size: 14px;
+    line-height: 24px;
+    display: none;
+}
+
+.category-card.completed .category-check {
+    display: block;
+}
+
+/* ========================================
+   카테고리 입력 화면
+   ======================================== */
+.category-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.category-icon-large {
+    font-size: 56px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+#screen-category h2 {
+    font-family: 'Gaegu', cursive;
+    font-size: 24px;
+}
+
+/* 질문 가이드 */
+.guide-box {
+    background: var(--white);
+    border-radius: 12px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+.guide-toggle {
+    width: 100%;
+    padding: 16px;
+    background: var(--secondary);
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: inherit;
+    color: var(--text);
+}
+
+.guide-content {
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.guide-content.open {
+    padding: 16px;
+    max-height: 300px;
+}
+
+.guide-content p {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.guide-content p::before {
+    content: "💭";
+    position: absolute;
+    left: 0;
+    font-size: 12px;
+}
+
+/* 입력 항목 */
+.items-container {
+    margin-bottom: 16px;
+}
+
+.item-input {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.item-input input {
+    flex: 1;
+    padding: 14px 16px;
+    font-size: 15px;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    font-family: inherit;
+    background: var(--white);
+    transition: border-color 0.2s;
+}
+
+.item-input input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.item-delete {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: #fee;
+    color: #e55;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+}
+
+.item-delete:hover {
+    background: #e55;
+    color: white;
+}
+
+/* ========================================
+   감사 편지 화면
+   ======================================== */
+#screen-letter h2 {
+    text-align: center;
+    font-family: 'Gaegu', cursive;
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.letter-intro {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.letter-paper {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px var(--shadow);
+    background-image: repeating-linear-gradient(
+        transparent,
+        transparent 31px,
+        #f0f0f0 31px,
+        #f0f0f0 32px
+    );
+    background-position: 0 24px;
+}
+
+.letter-field {
+    margin-bottom: 20px;
+}
+
+.letter-field label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+}
+
+.letter-field input,
+.letter-field textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border: none;
+    border-bottom: 2px solid var(--primary);
+    background: transparent;
+    font-family: 'Gaegu', cursive;
+    resize: none;
+}
+
+.letter-field input:focus,
+.letter-field textarea:focus {
+    outline: none;
+    border-bottom-color: var(--primary-dark);
+}
+
+.letter-field textarea {
+    min-height: 80px;
+    line-height: 32px;
+}
+
+.letter-from {
+    text-align: right;
+    font-family: 'Gaegu', cursive;
+    font-size: 18px;
+    color: var(--text);
+    margin-top: 16px;
+}
+
+/* ========================================
+   결과 화면
+   ======================================== */
+.result-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.result-header h2 {
+    font-family: 'Gaegu', cursive;
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.result-header p {
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.result-content {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px var(--shadow);
+}
+
+.result-section {
+    margin-bottom: 24px;
+}
+
+.result-section:last-child {
+    margin-bottom: 0;
+}
+
+.result-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text);
+}
+
+.result-section-title span {
+    font-size: 20px;
+}
+
+.result-items {
+    list-style: none;
+}
+
+.result-items li {
+    padding: 8px 0;
+    padding-left: 16px;
+    position: relative;
+    font-size: 14px;
+    color: var(--text-light);
+    border-bottom: 1px dashed #eee;
+}
+
+.result-items li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+}
+
+.result-items li:last-child {
+    border-bottom: none;
+}
+
+/* 결과 - 편지 */
+.result-letter {
+    background: linear-gradient(135deg, #fff9f0, #fff);
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 4px solid var(--primary);
+}
+
+.result-letter-to {
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.result-letter-content {
+    font-family: 'Gaegu', cursive;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 12px;
+}
+
+.result-letter-from {
+    text-align: right;
+    font-family: 'Gaegu', cursive;
+}
+
+/* 버튼 그룹 */
+.result-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+/* ========================================
+   반응형
+   ======================================== */
+@media (max-width: 480px) {
+    .screen {
+        padding: 20px;
+    }
+
+    .app-title {
+        font-size: 40px;
+    }
+
+    .category-grid {
+        gap: 12px;
+    }
+
+    .category-card {
+        padding: 20px 12px;
+    }
+
+    .category-icon {
+        font-size: 32px;
+    }
+}
+
+/* ========================================
+   인쇄용 스타일
+   ======================================== */
+@media print {
+    body {
+        background: white;
+    }
+
+    #app {
+        box-shadow: none;
+    }
+
+    .btn, .btn-back {
+        display: none;
+    }
+
+    .result-content {
+        box-shadow: none;
+        border: 1px solid #eee;
+    }
+}
+
+/* ========================================
+   캡처용 스타일
+   ======================================== */
+#capture-area {
+    width: 800px;
+    padding: 40px;
+    background: var(--background-light);
+}
+
+.capture-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 30px var(--shadow);
+}
+
+.capture-header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 2px dashed var(--primary);
+}
+
+.capture-header h1 {
+    font-family: 'Gaegu', cursive;
+    font-size: 36px;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.capture-header p {
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.capture-section {
+    margin-bottom: 28px;
+}
+
+.capture-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    color: var(--text);
+}
+
+.capture-section-title span {
+    font-size: 24px;
+}
+
+.capture-items {
+    list-style: none;
+    padding-left: 34px;
+}
+
+.capture-items li {
+    padding: 6px 0;
+    font-size: 15px;
+    color: var(--text-light);
+    position: relative;
+}
+
+.capture-items li::before {
+    content: "✦";
+    position: absolute;
+    left: -20px;
+    color: var(--primary);
+    font-size: 12px;
+}
+
+.capture-letter {
+    background: linear-gradient(135deg, #fff9f0, #fff);
+    border-radius: 16px;
+    padding: 28px;
+    border-left: 5px solid var(--primary);
+    margin-top: 12px;
+}
+
+.capture-letter-to {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+.capture-letter-content {
+    font-family: 'Gaegu', cursive;
+    font-size: 18px;
+    line-height: 2;
+    margin-bottom: 16px;
+}
+
+.capture-letter-from {
+    text-align: right;
+    font-family: 'Gaegu', cursive;
+    font-size: 18px;
+}
+
+.capture-footer {
+    text-align: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 2px dashed var(--primary);
+    color: var(--text-light);
+    font-size: 13px;
+}
