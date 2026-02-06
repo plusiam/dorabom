@@ -972,8 +972,15 @@ function importData() {
 }
 
 // 모든 데이터 초기화
-function resetAll() {
+function resetAll(event) {
     console.log('resetAll() 함수 호출됨');
+
+    // 이벤트 전파 방지
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        console.log('이벤트 전파 차단됨');
+    }
 
     const userConfirmed = confirm('정말 처음부터 다시 하시겠어요?\n모든 내용이 지워집니다.');
     console.log('사용자 확인:', userConfirmed);
