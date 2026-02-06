@@ -501,24 +501,23 @@ function saveLetter() {
 }
 
 // ==================== 결과 화면 ====================
-function renderResult() {
-    const container = document.getElementById('result-content');
+// 공통 콘텐츠 생성 함수 (결과 화면 및 캡처 공통 사용)
+function generateContentHTML(classPrefix = 'result') {
     let html = '';
-
-    // 각 카테고리 렌더링
     const categoryOrder = ['moment', 'memory', 'person', 'favorite', 'future'];
 
+    // 각 카테고리 렌더링
     categoryOrder.forEach(cat => {
         const info = categoryInfo[cat];
         const items = appData.categories[cat].filter(item => item.trim());
 
         if (items.length > 0) {
             html += `
-                <div class="result-section">
-                    <div class="result-section-title">
+                <div class="${classPrefix}-section">
+                    <div class="${classPrefix}-section-title">
                         <span>${info.icon}</span> ${info.title}
                     </div>
-                    <ul class="result-items">
+                    <ul class="${classPrefix}-items">
                         ${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
                     </ul>
                 </div>
@@ -528,13 +527,14 @@ function renderResult() {
 
     // 추억 사진 렌더링
     if (appData.images && appData.images.length > 0) {
+        const imageStyle = classPrefix === 'capture' ? 'style="max-width: 200px; margin: 8px; border-radius: 8px;"' : '';
         html += `
-            <div class="result-section">
-                <div class="result-section-title">
+            <div class="${classPrefix}-section">
+                <div class="${classPrefix}-section-title">
                     <span>📸</span> 추억 사진
                 </div>
-                <div class="result-images">
-                    ${appData.images.map(img => `<img src="${img.data}" alt="${escapeHtml(img.name)}">`).join('')}
+                <div class="${classPrefix}-images">
+                    ${appData.images.map(img => `<img src="${img.data}" alt="${escapeHtml(img.name)}" ${imageStyle}>`).join('')}
                 </div>
             </div>
         `;
@@ -542,25 +542,33 @@ function renderResult() {
 
     // 편지 렌더링
     if (appData.letter.to) {
+        const letterContent = classPrefix === 'capture'
+            ? `${appData.letter.content ? escapeHtml(appData.letter.content) + '<br><br>' : ''}${appData.letter.feeling ? escapeHtml(appData.letter.feeling) + '<br><br>' : ''}${appData.letter.promise ? escapeHtml(appData.letter.promise) : ''}`
+            : `${appData.letter.content ? `<p>${escapeHtml(appData.letter.content)}</p>` : ''}${appData.letter.feeling ? `<p>${escapeHtml(appData.letter.feeling)}</p>` : ''}${appData.letter.promise ? `<p>${escapeHtml(appData.letter.promise)}</p>` : ''}`;
+
         html += `
-            <div class="result-section">
-                <div class="result-section-title">
+            <div class="${classPrefix}-section">
+                <div class="${classPrefix}-section-title">
                     <span>💌</span> 감사 편지
                 </div>
-                <div class="result-letter">
-                    <div class="result-letter-to">To. ${escapeHtml(appData.letter.to)}</div>
-                    <div class="result-letter-content">
-                        ${appData.letter.content ? `<p>${escapeHtml(appData.letter.content)}</p>` : ''}
-                        ${appData.letter.feeling ? `<p>${escapeHtml(appData.letter.feeling)}</p>` : ''}
-                        ${appData.letter.promise ? `<p>${escapeHtml(appData.letter.promise)}</p>` : ''}
+                <div class="${classPrefix}-letter">
+                    <div class="${classPrefix}-letter-to">To. ${escapeHtml(appData.letter.to)}</div>
+                    <div class="${classPrefix}-letter-content">
+                        ${letterContent}
                     </div>
-                    <div class="result-letter-from">From. ${escapeHtml(appData.userName)}</div>
+                    <div class="${classPrefix}-letter-from">From. ${escapeHtml(appData.userName)}</div>
                 </div>
             </div>
         `;
     }
 
-    container.innerHTML = html;
+    return html;
+}
+
+// 결과 화면 렌더링
+function renderResult() {
+    const container = document.getElementById('result-content');
+    container.innerHTML = generateContentHTML('result');
 
     // 저장 공간 표시 업데이트
     updateStorageIndicator();
@@ -698,62 +706,9 @@ async function saveAsPDF() {
     }
 }
 
-// 캡처용 HTML 생성
+// 캡처용 HTML 생성 (generateContentHTML 재사용)
 function createCaptureHTML() {
-    let sectionsHTML = '';
-    const categoryOrder = ['moment', 'memory', 'person', 'favorite', 'future'];
-
-    categoryOrder.forEach(cat => {
-        const info = categoryInfo[cat];
-        const items = appData.categories[cat].filter(item => item.trim());
-
-        if (items.length > 0) {
-            sectionsHTML += `
-                <div class="capture-section">
-                    <div class="capture-section-title">
-                        <span>${info.icon}</span> ${info.title}
-                    </div>
-                    <ul class="capture-items">
-                        ${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
-                    </ul>
-                </div>
-            `;
-        }
-    });
-
-    // 추억 사진
-    if (appData.images && appData.images.length > 0) {
-        sectionsHTML += `
-            <div class="capture-section">
-                <div class="capture-section-title">
-                    <span>📸</span> 추억 사진
-                </div>
-                <div class="capture-images">
-                    ${appData.images.map(img => `<img src="${img.data}" alt="${escapeHtml(img.name)}" style="max-width: 200px; margin: 8px; border-radius: 8px;">`).join('')}
-                </div>
-            </div>
-        `;
-    }
-
-    // 편지
-    if (appData.letter.to) {
-        sectionsHTML += `
-            <div class="capture-section">
-                <div class="capture-section-title">
-                    <span>💌</span> 감사 편지
-                </div>
-                <div class="capture-letter">
-                    <div class="capture-letter-to">To. ${escapeHtml(appData.letter.to)}</div>
-                    <div class="capture-letter-content">
-                        ${appData.letter.content ? escapeHtml(appData.letter.content) + '<br><br>' : ''}
-                        ${appData.letter.feeling ? escapeHtml(appData.letter.feeling) + '<br><br>' : ''}
-                        ${appData.letter.promise ? escapeHtml(appData.letter.promise) : ''}
-                    </div>
-                    <div class="capture-letter-from">From. ${escapeHtml(appData.userName)}</div>
-                </div>
-            </div>
-        `;
-    }
+    const sectionsHTML = generateContentHTML('capture');
 
     return `
         <div class="capture-card">
