@@ -806,28 +806,45 @@ body {
     position: absolute;
     top: 8px;
     right: 8px;
-    width: 28px;
-    height: 28px;
-    border: none;
-    background: rgba(255, 255, 255, 0.9);
-    color: #e55;
+    width: 32px;
+    height: 32px;
+    border: 2px solid rgba(231, 76, 60, 0.2);
+    background: rgba(255, 255, 255, 0.95);
+    color: #e74c3c;
     border-radius: 50%;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    opacity: 0.9; /* 모바일에서 항상 표시 */
+    transition: all 0.2s ease;
+    z-index: 10;
 }
 
-.image-item:hover .image-delete {
-    opacity: 1;
+/* 데스크톱에서는 hover 시에만 표시 */
+@media (hover: hover) {
+    .image-delete {
+        opacity: 0;
+    }
+
+    .image-item:hover .image-delete {
+        opacity: 1;
+    }
 }
 
-.image-delete:hover {
+.image-delete:hover,
+.image-delete:active {
     background: #fee;
+    transform: scale(1.1);
+    border-color: #e74c3c;
+}
+
+/* 터치 기기 명시적 지원 */
+.image-delete:active {
+    background: #fcc;
 }
 
 .letter-paper {

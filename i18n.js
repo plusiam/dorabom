@@ -231,7 +231,7 @@ const translations = {
 
         // 시작 화면
         start_title: '回顾',
-        start_subtitle: '小学六年的感恩时刻',
+        start_subtitle: '过去时光的感恩记录',
         start_intro_1: '如果愿望清单是未来想做的事，',
         start_intro_2: '回顾就是对过去的感恩。',
         start_button: '开始 ✨',
@@ -250,7 +250,75 @@ const translations = {
         progress_label: '进度',
         letter_button: '💌 写感谢信',
 
-        // 기타 번역은 필요시 추가
+        // 가이드 질문
+        guide_toggle: '💭 问题指南',
+
+        moment_guide_1: '最自豪的时刻是什么时候？',
+        moment_guide_2: '有没有"我做到了！"的经历？',
+        moment_guide_3: '虽然困难但没有放弃的经验是？',
+        moment_guide_4: '第一次挑战的事情是什么？',
+
+        memory_guide_1: '和一起的人最有趣的事是什么？',
+        memory_guide_2: '有没有难忘的特别时刻？',
+        memory_guide_3: '旅行或外出的回忆是？',
+        memory_guide_4: '有什么好笑的趣事？',
+
+        person_guide_1: '困难时帮助我的人是谁？',
+        person_guide_2: '有没有印象深刻的导师或同事？',
+        person_guide_3: '对总是支持我的家人有什么感激的？',
+        person_guide_4: '相信我的人是谁？',
+
+        favorite_guide_1: '最有趣的活动或事情是？',
+        favorite_guide_2: '经常去的地方或空间是？',
+        favorite_guide_3: '愉快的聚会或爱好活动是？',
+        favorite_guide_4: '空闲时间经常做的事是？',
+
+        future_guide_1: '今后想要珍惜的是什么？',
+        future_guide_2: '想继续联系的人是？',
+        future_guide_3: '在新环境中想保持的我的样子是？',
+        future_guide_4: '想对未来的自己说什么？',
+
+        // 감사 편지
+        letter_title: '💌 感谢信',
+        letter_intro: '向最感谢的人传达心意',
+        letter_to: '致',
+        letter_from: '来自',
+        letter_to_placeholder: '收件人',
+        letter_content_label: '感激的事',
+        letter_content_placeholder: '什么事让你感激？',
+        letter_feeling_label: '当时的心情',
+        letter_feeling_placeholder: '那时是什么感觉？',
+        letter_promise_label: '今后的决心',
+        letter_promise_placeholder: '今后想怎么做？',
+        letter_complete: '完成信件',
+
+        // 이미지
+        images_title: '📸 回忆照片',
+        images_add: '+ 添加照片',
+        images_empty: '还没有照片。添加回忆照片吧！',
+
+        // 결과
+        result_title: '的回顾',
+        result_subtitle: '感恩记录',
+        save_image: '📷 保存为图片',
+        save_pdf: '📄 保存为PDF',
+        backup_data: '💾 备份数据',
+        import_data: '📂 导入数据',
+
+        // 메시지
+        alert_name_required: '请输入名字！',
+        alert_letter_required: '请务必填写收件人和感激的事！',
+        alert_max_items: '最多可以输入10项！',
+        alert_max_images: '最多可以上传5张照片！',
+        alert_image_size: '图片大小必须在5MB以下。',
+        alert_delete_image: '要删除这张照片吗？',
+        alert_reset_confirm: '真的要重新开始吗？\n所有内容将被删除。',
+        alert_backup_success: '数据已备份！\n请妥善保管文件。',
+        alert_import_confirm: '要用导入的数据覆盖当前数据吗？',
+        alert_import_success: '成功导入数据！',
+        alert_import_error: '读取文件时出错。\n请确认是否为正确的备份文件。',
+        alert_no_data: '没有要保存的数据。',
+
         footer_text: '回顾 - 对过去的感恩'
     },
 
@@ -265,7 +333,7 @@ const translations = {
 
         // 시작 화면
         start_title: 'Nhìn Lại',
-        start_subtitle: '6 năm tiểu học',
+        start_subtitle: 'Ghi nhận lòng biết ơn về thời gian đã qua',
         start_intro_1: 'Nếu danh sách ước mơ là về tương lai,',
         start_intro_2: 'Nhìn lại là về lòng biết ơn quá khứ.',
         start_button: 'Bắt đầu ✨',
@@ -283,6 +351,75 @@ const translations = {
 
         progress_label: 'Tiến độ',
         letter_button: '💌 Viết thư cảm ơn',
+
+        // 가이드 질문
+        guide_toggle: '💭 Hướng dẫn câu hỏi',
+
+        moment_guide_1: 'Khoảnh khắc tự hào nhất là khi nào?',
+        moment_guide_2: 'Có trải nghiệm nào "Tôi đã làm được!"?',
+        moment_guide_3: 'Kinh nghiệm khó khăn nhưng không bỏ cuộc là?',
+        moment_guide_4: 'Việc thử thách lần đầu tiên là gì?',
+
+        memory_guide_1: 'Điều thú vị nhất với những người cùng làm là?',
+        memory_guide_2: 'Có khoảnh khắc đặc biệt nào khó quên không?',
+        memory_guide_3: 'Ký ức từ chuyến đi hay dã ngoại?',
+        memory_guide_4: 'Có câu chuyện buồn cười nào không?',
+
+        person_guide_1: 'Ai đã giúp đỡ khi tôi khó khăn?',
+        person_guide_2: 'Có người cố vấn hoặc đồng nghiệp nào đáng nhớ?',
+        person_guide_3: 'Điều biết ơn gia đình luôn ủng hộ tôi?',
+        person_guide_4: 'Ai đã tin tưởng tôi?',
+
+        favorite_guide_1: 'Hoạt động hay việc thú vị nhất là?',
+        favorite_guide_2: 'Nơi hay không gian thường đến là?',
+        favorite_guide_3: 'Buổi họp mặt hay sở thích vui vẻ là?',
+        favorite_guide_4: 'Việc thường làm trong thời gian rảnh là?',
+
+        future_guide_1: 'Điều muốn giữ gìn trong tương lai là?',
+        future_guide_2: 'Người muốn tiếp tục liên lạc là?',
+        future_guide_3: 'Hình ảnh bản thân muốn giữ trong môi trường mới?',
+        future_guide_4: 'Muốn nói gì với bản thân tương lai?',
+
+        // 감사 편지
+        letter_title: '💌 Thư cảm ơn',
+        letter_intro: 'Gửi lời cảm ơn đến người đặc biệt nhất',
+        letter_to: 'Gửi',
+        letter_from: 'Từ',
+        letter_to_placeholder: 'Người nhận',
+        letter_content_label: 'Điều biết ơn',
+        letter_content_placeholder: 'Điều gì khiến bạn biết ơn?',
+        letter_feeling_label: 'Cảm giác lúc đó',
+        letter_feeling_placeholder: 'Cảm giác lúc đó như thế nào?',
+        letter_promise_label: 'Quyết tâm',
+        letter_promise_placeholder: 'Muốn làm gì trong tương lai?',
+        letter_complete: 'Hoàn thành thư',
+
+        // 이미지
+        images_title: '📸 Ảnh kỷ niệm',
+        images_add: '+ Thêm ảnh',
+        images_empty: 'Chưa có ảnh. Thêm ảnh kỷ niệm nhé!',
+
+        // 결과
+        result_title: ' của tôi',
+        result_subtitle: 'Ghi nhận lòng biết ơn',
+        save_image: '📷 Lưu dạng ảnh',
+        save_pdf: '📄 Lưu dạng PDF',
+        backup_data: '💾 Sao lưu dữ liệu',
+        import_data: '📂 Nhập dữ liệu',
+
+        // 메시지
+        alert_name_required: 'Vui lòng nhập tên!',
+        alert_letter_required: 'Vui lòng nhập người nhận và điều biết ơn!',
+        alert_max_items: 'Có thể nhập tối đa 10 mục!',
+        alert_max_images: 'Có thể tải lên tối đa 5 ảnh!',
+        alert_image_size: 'Kích thước ảnh phải dưới 5MB.',
+        alert_delete_image: 'Xóa ảnh này?',
+        alert_reset_confirm: 'Bạn có chắc muốn bắt đầu lại?\nTất cả nội dung sẽ bị xóa.',
+        alert_backup_success: 'Đã sao lưu dữ liệu!\nVui lòng giữ file an toàn.',
+        alert_import_confirm: 'Ghi đè dữ liệu hiện tại với dữ liệu nhập?',
+        alert_import_success: 'Nhập dữ liệu thành công!',
+        alert_import_error: 'Lỗi đọc file.\nVui lòng kiểm tra file sao lưu hợp lệ.',
+        alert_no_data: 'Không có dữ liệu để lưu.',
 
         footer_text: 'Nhìn Lại - Biết ơn quá khứ'
     }
@@ -334,6 +471,16 @@ function updatePageLanguage() {
         const key = element.getAttribute('data-i18n-aria');
         element.setAttribute('aria-label', t(key));
     });
+
+    // categoryInfo 재로드
+    if (typeof updateCategoryInfo === 'function') {
+        updateCategoryInfo();
+    }
+
+    // 현재 화면 다시 렌더링
+    if (typeof renderCurrentCategory === 'function' && currentCategory) {
+        renderCurrentCategory();
+    }
 }
 
 // 초기화

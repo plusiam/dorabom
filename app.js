@@ -24,62 +24,82 @@ let appData = {
     completedCategories: []
 };
 
-// 카테고리 정보
-const categoryInfo = {
-    moment: {
-        icon: '⭐',
-        title: '의미 있던 순간',
-        guides: [
-            '가장 뿌듯했던 순간은 언제였나요?',
-            '"내가 해냈다!"고 느꼈던 일이 있나요?',
-            '힘들었지만 포기하지 않았던 경험은?',
-            '처음으로 도전해본 일은 무엇인가요?'
-        ]
-    },
-    memory: {
-        icon: '📸',
-        title: '소중한 추억',
-        guides: [
-            '함께한 사람들과 가장 재미있었던 일은?',
-            '잊지 못할 특별한 순간이 있나요?',
-            '여행이나 외출에서의 추억은?',
-            '웃음이 나는 재미있는 에피소드는?'
-        ]
-    },
-    person: {
-        icon: '💝',
-        title: '고마웠던 사람',
-        guides: [
-            '힘들 때 도와준 사람은 누구인가요?',
-            '기억에 남는 멘토나 동료가 있나요?',
-            '언제나 응원해준 가족에게 고마운 점은?',
-            '나를 믿어준 사람은 누구인가요?'
-        ]
-    },
-    favorite: {
-        icon: '🌟',
-        title: '내가 좋아했던 것',
-        guides: [
-            '가장 재미있었던 활동이나 일은?',
-            '자주 찾았던 장소나 공간은?',
-            '즐거웠던 모임이나 취미 활동은?',
-            '여유 시간에 자주 했던 일은?'
-        ]
-    },
-    future: {
-        icon: '🌱',
-        title: '앞으로의 다짐',
-        guides: [
-            '앞으로도 간직하고 싶은 것은?',
-            '계속 연락하고 싶은 사람은?',
-            '새로운 환경에서 지키고 싶은 나의 모습은?',
-            '미래의 나에게 해주고 싶은 말은?'
-        ]
-    }
-};
+// 카테고리 정보 (동적으로 번역)
+function getCategoryInfo() {
+    return {
+        moment: {
+            icon: '⭐',
+            get title() { return t('category_moment'); },
+            get guides() {
+                return [
+                    t('moment_guide_1'),
+                    t('moment_guide_2'),
+                    t('moment_guide_3'),
+                    t('moment_guide_4')
+                ];
+            }
+        },
+        memory: {
+            icon: '📸',
+            get title() { return t('category_memory'); },
+            get guides() {
+                return [
+                    t('memory_guide_1'),
+                    t('memory_guide_2'),
+                    t('memory_guide_3'),
+                    t('memory_guide_4')
+                ];
+            }
+        },
+        person: {
+            icon: '💝',
+            get title() { return t('category_person'); },
+            get guides() {
+                return [
+                    t('person_guide_1'),
+                    t('person_guide_2'),
+                    t('person_guide_3'),
+                    t('person_guide_4')
+                ];
+            }
+        },
+        favorite: {
+            icon: '🌟',
+            get title() { return t('category_favorite'); },
+            get guides() {
+                return [
+                    t('favorite_guide_1'),
+                    t('favorite_guide_2'),
+                    t('favorite_guide_3'),
+                    t('favorite_guide_4')
+                ];
+            }
+        },
+        future: {
+            icon: '🌱',
+            get title() { return t('category_future'); },
+            get guides() {
+                return [
+                    t('future_guide_1'),
+                    t('future_guide_2'),
+                    t('future_guide_3'),
+                    t('future_guide_4')
+                ];
+            }
+        }
+    };
+}
+
+const categoryInfo = getCategoryInfo();
 
 // 현재 선택된 카테고리
 let currentCategory = '';
+
+// 카테고리 정보 업데이트 (언어 변경 시)
+function updateCategoryInfo() {
+    // categoryInfo getter를 다시 호출하여 최신 번역 적용
+    Object.assign(categoryInfo, getCategoryInfo());
+}
 
 // ==================== 접근성 유틸리티 ====================
 // 스크린 리더 알림 함수
@@ -112,7 +132,7 @@ function getScreenTitle(screenId) {
         'screen-hub': (appData.userName || '친구') + '의 돌아봄',
         'screen-category': categoryInfo[currentCategory]?.title || '카테고리',
         'screen-letter': t('letter_title') || '감사 편지',
-        'screen-result': (appData.userName || '친구') + t('result_title') || '결과 화면'
+        'screen-result': ((appData.userName || t('name_placeholder')) + t('result_title')) || t('result_title')
     };
     return titles[screenId] || '화면';
 }
@@ -138,35 +158,45 @@ document.addEventListener('DOMContentLoaded', function() {
 // ==================== 데이터 저장/불러오기 ====================
 // LocalStorage에서 데이터 불러오기
 function loadData() {
-    const saved = localStorage.getItem('dorabom-data');
-    if (saved) {
-        appData = JSON.parse(saved);
+    try {
+        const saved = localStorage.getItem('dorabom-data');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            // 데이터 구조 검증
+            if (parsed && typeof parsed === 'object') {
+                appData = parsed;
+            } else {
+                console.warn('저장된 데이터 형식이 올바르지 않습니다. 기본값을 사용합니다.');
+            }
+        }
+    } catch (error) {
+        console.error('데이터 로드 중 오류:', error);
+        console.warn('손상된 데이터를 건너뛰고 기본값을 사용합니다.');
+        // 손상된 데이터 제거
+        localStorage.removeItem('dorabom-data');
     }
 }
 
-// LocalStorage에 데이터 저장
+// LocalStorage에 데이터 저장 (안전)
 function saveData() {
-    localStorage.setItem('dorabom-data', JSON.stringify(appData));
-}
-
-// 안전한 데이터 저장 (에러 핸들링 포함)
-function saveDataSafe() {
     try {
-        const dataString = JSON.stringify(appData);
-        localStorage.setItem('dorabom-data', dataString);
-        return true;
+        const jsonData = JSON.stringify(appData);
+        localStorage.setItem('dorabom-data', jsonData);
     } catch (error) {
         if (error.name === 'QuotaExceededError') {
-            console.error('LocalStorage 용량 초과:', error);
-            // 사용자에게 알림
-            const usage = getStorageUsage();
-            console.warn(`현재 저장 공간: ${usage.usedMB.toFixed(2)}MB / ${usage.limitMB}MB`);
-            return false;
+            alert(t('alert_storage_full') || '저장 공간이 부족합니다. 사진을 줄여주세요.');
         } else {
-            console.error('데이터 저장 실패:', error);
-            return false;
+            console.error('데이터 저장 중 오류:', error);
+            alert(t('alert_save_error') || '저장 중 오류가 발생했습니다.');
         }
     }
+}
+
+// 안전한 데이터 저장 (레거시 - saveData() 사용 권장)
+function saveDataSafe() {
+    // saveData()로 통합됨 - 호환성을 위해 유지
+    saveData();
+    return true; // 예외 발생 시 saveData()에서 처리
 }
 
 // 저장 공간 사용량 확인
@@ -560,7 +590,7 @@ async function saveAsImage() {
     }
 }
 
-// PDF로 저장
+// PDF로 저장 (다중 페이지 지원)
 async function saveAsPDF() {
     const captureArea = document.getElementById('capture-area');
 
@@ -585,18 +615,68 @@ async function saveAsPDF() {
         const pdf = new jsPDF('p', 'mm', 'a4');
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
+        const pageContentHeight = pdfHeight - 20; // 상하 여백 10mm씩
 
-        // 이미지 비율 계산
+        // 이미지 크기 계산
         const imgWidth = canvas.width;
         const imgHeight = canvas.height;
-        const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight) * 0.9;
+        const imgRatio = imgWidth / imgHeight;
 
-        const finalWidth = imgWidth * ratio;
-        const finalHeight = imgHeight * ratio;
-        const x = (pdfWidth - finalWidth) / 2;
-        const y = 10;
+        let finalWidth, finalHeight;
 
-        pdf.addImage(imgData, 'PNG', x, y, finalWidth, finalHeight);
+        // 한 페이지에 맞는 경우
+        if (imgHeight / imgWidth <= pageContentHeight / pdfWidth) {
+            const ratio = Math.min(pdfWidth / imgWidth, pageContentHeight / imgHeight) * 0.9;
+            finalWidth = imgWidth * ratio;
+            finalHeight = imgHeight * ratio;
+            const x = (pdfWidth - finalWidth) / 2;
+            const y = 10;
+
+            pdf.addImage(imgData, 'PNG', x, y, finalWidth, finalHeight);
+        } else {
+            // 다중 페이지 필요
+            finalWidth = pdfWidth * 0.9;
+            finalHeight = finalWidth / imgRatio;
+
+            const totalPages = Math.ceil(imgHeight / (imgWidth * pageContentHeight / finalWidth));
+
+            for (let page = 0; page < totalPages; page++) {
+                if (page > 0) {
+                    pdf.addPage();
+                }
+
+                const sourceY = page * imgWidth * pageContentHeight / finalWidth;
+                const sourceHeight = Math.min(
+                    imgWidth * pageContentHeight / finalWidth,
+                    imgHeight - sourceY
+                );
+
+                // 페이지별 이미지 조각 생성
+                const pageCanvas = document.createElement('canvas');
+                pageCanvas.width = imgWidth;
+                pageCanvas.height = sourceHeight;
+                const pageCtx = pageCanvas.getContext('2d');
+
+                pageCtx.drawImage(
+                    canvas,
+                    0, sourceY, imgWidth, sourceHeight,
+                    0, 0, imgWidth, sourceHeight
+                );
+
+                const pageImgData = pageCanvas.toDataURL('image/png');
+                const pageImgHeight = sourceHeight / imgWidth * finalWidth;
+
+                pdf.addImage(
+                    pageImgData,
+                    'PNG',
+                    (pdfWidth - finalWidth) / 2,
+                    10,
+                    finalWidth,
+                    pageImgHeight
+                );
+            }
+        }
+
         pdf.save(`돌아봄_${appData.userName}_${getDateString()}.pdf`);
 
     } catch (error) {
