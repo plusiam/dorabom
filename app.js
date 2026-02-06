@@ -973,38 +973,55 @@ function importData() {
 
 // 모든 데이터 초기화
 function resetAll() {
-    if (confirm('정말 처음부터 다시 하시겠어요?\n모든 내용이 지워집니다.')) {
-        // LocalStorage 완전 삭제
-        localStorage.removeItem('dorabom-data');
+    console.log('resetAll() 함수 호출됨');
 
-        // appData 초기화
-        appData = {
-            userName: '',
-            categories: {
-                moment: [],
-                memory: [],
-                person: [],
-                favorite: [],
-                future: []
-            },
-            letter: {
-                to: '',
-                content: '',
-                feeling: '',
-                promise: ''
-            },
-            images: [],
-            completedCategories: []
-        };
+    const userConfirmed = confirm('정말 처음부터 다시 하시겠어요?\n모든 내용이 지워집니다.');
+    console.log('사용자 확인:', userConfirmed);
 
-        // 이름 입력 필드 초기화
-        const nameInput = document.getElementById('user-name');
-        if (nameInput) {
-            nameInput.value = '';
+    if (userConfirmed) {
+        try {
+            // LocalStorage 완전 삭제
+            console.log('LocalStorage 삭제 시작');
+            localStorage.removeItem('dorabom-data');
+            console.log('LocalStorage 삭제 완료');
+
+            // appData 초기화
+            appData = {
+                userName: '',
+                categories: {
+                    moment: [],
+                    memory: [],
+                    person: [],
+                    favorite: [],
+                    future: []
+                },
+                letter: {
+                    to: '',
+                    content: '',
+                    feeling: '',
+                    promise: ''
+                },
+                images: [],
+                completedCategories: []
+            };
+            console.log('appData 초기화 완료');
+
+            // 이름 입력 필드 초기화
+            const nameInput = document.getElementById('user-name');
+            if (nameInput) {
+                nameInput.value = '';
+                console.log('이름 입력 필드 초기화 완료');
+            }
+
+            // 페이지 새로고침으로 완전 초기화
+            console.log('페이지 새로고침 시작');
+            window.location.reload();
+        } catch (error) {
+            console.error('초기화 중 오류 발생:', error);
+            alert('초기화 중 오류가 발생했습니다: ' + error.message);
         }
-
-        // 페이지 새로고침으로 완전 초기화
-        window.location.reload();
+    } else {
+        console.log('사용자가 초기화를 취소했습니다');
     }
 }
 
