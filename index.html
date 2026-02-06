@@ -110,14 +110,14 @@
                     💌 감사 편지 쓰기
                 </button>
 
-                <button class="btn btn-text" onclick="resetAll()" style="margin-top: 20px;">🔄 처음부터 다시 하기</button>
+                <button class="btn btn-text" onclick="resetAll()" style="margin-top: 20px;" data-i18n="reset">🔄 처음부터 다시 하기</button>
             </div>
         </section>
 
         <!-- 화면 4: 카테고리별 입력 -->
         <section id="screen-category" class="screen">
             <div class="container">
-                <button class="btn-back" onclick="goToScreen('screen-hub')">← 돌아가기</button>
+                <button class="btn-back" onclick="goToScreen('screen-hub')" data-i18n="back">← 돌아가기</button>
 
                 <div class="category-header">
                     <span class="category-icon-large" id="current-category-icon">⭐</span>
@@ -125,7 +125,7 @@
                 </div>
 
                 <div class="guide-box" id="guide-box">
-                    <button class="guide-toggle" onclick="toggleGuide()" aria-expanded="false" aria-controls="guide-content">
+                    <button class="guide-toggle" onclick="toggleGuide()" aria-expanded="false" aria-controls="guide-content" data-i18n="guide_toggle">
                         💭 질문 가이드 <span id="guide-arrow" aria-hidden="true">▼</span>
                     </button>
                     <div class="guide-content" id="guide-content" role="region" aria-label="질문 가이드">
@@ -137,54 +137,54 @@
                     <!-- 입력 항목들이 여기에 추가됨 -->
                 </div>
 
-                <button class="btn btn-add" onclick="addItem()">+ 항목 추가</button>
+                <button class="btn btn-add" onclick="addItem()" data-i18n="add_item">+ 항목 추가</button>
 
-                <button class="btn btn-primary btn-large" onclick="saveCategory()">저장하고 돌아가기</button>
+                <button class="btn btn-primary btn-large" onclick="saveCategory()" data-i18n="save">저장하고 돌아가기</button>
             </div>
         </section>
 
         <!-- 화면 5: 감사 편지 -->
         <section id="screen-letter" class="screen">
             <div class="container">
-                <button class="btn-back" onclick="goToScreen('screen-hub')">← 돌아가기</button>
+                <button class="btn-back" onclick="goToScreen('screen-hub')" data-i18n="back">← 돌아가기</button>
 
-                <h2>💌 감사 편지</h2>
-                <p class="letter-intro">가장 고마운 사람에게 마음을 전해보세요</p>
+                <h2 data-i18n="letter_title">💌 감사 편지</h2>
+                <p class="letter-intro" data-i18n="letter_intro">가장 고마운 사람에게 마음을 전해보세요</p>
 
                 <!-- 이미지 갤러리 -->
                 <div class="images-section">
                     <div class="images-header">
-                        <h3>📸 추억 사진</h3>
-                        <button class="btn btn-small" onclick="uploadImage()">+ 사진 추가</button>
+                        <h3 data-i18n="images_title">📸 추억 사진</h3>
+                        <button class="btn btn-small" onclick="uploadImage()" data-i18n="images_add">+ 사진 추가</button>
                     </div>
                     <div class="images-container" id="images-container">
-                        <p class="no-images">아직 사진이 없어요. 추억 사진을 추가해보세요!</p>
+                        <p class="no-images" data-i18n="images_empty">아직 사진이 없어요. 추억 사진을 추가해보세요!</p>
                     </div>
                 </div>
 
                 <div class="letter-paper" role="form" aria-label="감사 편지 작성">
                     <div class="letter-field">
-                        <label for="letter-to">To.</label>
-                        <input type="text" id="letter-to" placeholder="받는 사람" aria-required="true">
+                        <label for="letter-to" data-i18n="letter_to">To.</label>
+                        <input type="text" id="letter-to" data-i18n-placeholder="letter_to_placeholder" placeholder="받는 사람" aria-required="true">
                     </div>
                     <div class="letter-field">
-                        <label for="letter-content">고마웠던 일</label>
-                        <textarea id="letter-content" placeholder="어떤 일이 고마웠나요?" aria-required="true"></textarea>
+                        <label for="letter-content" data-i18n="letter_content_label">고마웠던 일</label>
+                        <textarea id="letter-content" data-i18n-placeholder="letter_content_placeholder" placeholder="어떤 일이 고마웠나요?" aria-required="true"></textarea>
                     </div>
                     <div class="letter-field">
-                        <label for="letter-feeling">그때 내 마음</label>
-                        <textarea id="letter-feeling" placeholder="그때 어떤 기분이었나요?"></textarea>
+                        <label for="letter-feeling" data-i18n="letter_feeling_label">그때 내 마음</label>
+                        <textarea id="letter-feeling" data-i18n-placeholder="letter_feeling_placeholder" placeholder="그때 어떤 기분이었나요?"></textarea>
                     </div>
                     <div class="letter-field">
-                        <label for="letter-promise">앞으로의 다짐</label>
-                        <textarea id="letter-promise" placeholder="앞으로 어떻게 하고 싶나요?"></textarea>
+                        <label for="letter-promise" data-i18n="letter_promise_label">앞으로의 다짐</label>
+                        <textarea id="letter-promise" data-i18n-placeholder="letter_promise_placeholder" placeholder="앞으로 어떻게 하고 싶나요?"></textarea>
                     </div>
                     <div class="letter-from">
-                        <span>From. <span id="letter-from-name">친구</span></span>
+                        <span><span data-i18n="letter_from">From.</span> <span id="letter-from-name">친구</span></span>
                     </div>
                 </div>
 
-                <button class="btn btn-primary btn-large" onclick="saveLetter()">편지 완성하기</button>
+                <button class="btn btn-primary btn-large" onclick="saveLetter()" data-i18n="letter_complete">편지 완성하기</button>
             </div>
         </section>
 
@@ -201,21 +201,21 @@
                 </div>
 
                 <div class="result-actions">
-                    <button class="btn btn-primary" onclick="openTemplateGallery()">🎨 템플릿 선택하여 저장</button>
-                    <button class="btn btn-outline" onclick="goToScreen('screen-hub')">✏️ 수정하기</button>
+                    <button class="btn btn-primary" onclick="openTemplateGallery()" data-i18n="template_select">🎨 템플릿 선택하여 저장</button>
+                    <button class="btn btn-outline" onclick="goToScreen('screen-hub')" data-i18n="edit">✏️ 수정하기</button>
                 </div>
 
                 <div class="result-backup">
-                    <button class="btn btn-backup" onclick="exportData()">💾 데이터 백업하기</button>
-                    <button class="btn btn-backup" onclick="importData()">📂 데이터 불러오기</button>
+                    <button class="btn btn-backup" onclick="exportData()" data-i18n="backup_data">💾 데이터 백업하기</button>
+                    <button class="btn btn-backup" onclick="importData()" data-i18n="import_data">📂 데이터 불러오기</button>
                 </div>
 
                 <div class="storage-info">
                     <p id="storage-indicator" class="storage-indicator">💾 저장 공간 확인 중...</p>
-                    <p class="storage-hint">💡 용량이 부족하면 사진을 줄이거나 데이터를 백업하세요</p>
+                    <p class="storage-hint" data-i18n="storage_hint">💡 용량이 부족하면 사진을 줄이거나 데이터를 백업하세요</p>
                 </div>
 
-                <button class="btn btn-text" onclick="resetAll()">🔄 처음부터 다시 하기</button>
+                <button class="btn btn-text" onclick="resetAll()" data-i18n="reset">🔄 처음부터 다시 하기</button>
             </div>
         </section>
     </div>

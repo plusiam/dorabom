@@ -48,6 +48,7 @@ const translations = {
 
         // 가이드 질문
         guide_toggle: '💭 질문 가이드',
+        add_item: '+ 항목 추가',
 
         moment_guide_1: '가장 뿌듯했던 순간은 언제였나요?',
         moment_guide_2: '"내가 해냈다!"고 느꼈던 일이 있나요?',
@@ -96,10 +97,12 @@ const translations = {
         // 결과
         result_title: '의 돌아봄',
         result_subtitle: '초등학교 6년간의 감사 기록',
+        template_select: '🎨 템플릿 선택하여 저장',
         save_image: '📷 이미지로 저장',
         save_pdf: '📄 PDF로 저장',
         backup_data: '💾 데이터 백업하기',
         import_data: '📂 데이터 불러오기',
+        storage_hint: '💡 용량이 부족하면 사진을 줄이거나 데이터를 백업하세요',
 
         // 메시지
         alert_name_required: '이름을 입력해주세요!',
@@ -150,6 +153,7 @@ const translations = {
 
         // Guide questions
         guide_toggle: '💭 Question Guide',
+        add_item: '+ Add Item',
 
         moment_guide_1: 'When did you feel most proud?',
         moment_guide_2: 'When did you feel "I did it!"?',
@@ -198,10 +202,12 @@ const translations = {
         // Result
         result_title: '\'s Reflection',
         result_subtitle: '6 Years of Gratitude',
+        template_select: '🎨 Save with Template',
         save_image: '📷 Save as Image',
         save_pdf: '📄 Save as PDF',
         backup_data: '💾 Backup Data',
         import_data: '📂 Import Data',
+        storage_hint: '💡 Reduce photos or backup data if storage is low',
 
         // Messages
         alert_name_required: 'Please enter your name!',
@@ -252,6 +258,7 @@ const translations = {
 
         // 가이드 질문
         guide_toggle: '💭 问题指南',
+        add_item: '+ 添加项目',
 
         moment_guide_1: '最自豪的时刻是什么时候？',
         moment_guide_2: '有没有"我做到了！"的经历？',
@@ -300,10 +307,12 @@ const translations = {
         // 결과
         result_title: '的回顾',
         result_subtitle: '感恩记录',
+        template_select: '🎨 选择模板保存',
         save_image: '📷 保存为图片',
         save_pdf: '📄 保存为PDF',
         backup_data: '💾 备份数据',
         import_data: '📂 导入数据',
+        storage_hint: '💡 如果容量不足，请减少照片或备份数据',
 
         // 메시지
         alert_name_required: '请输入名字！',
@@ -354,6 +363,7 @@ const translations = {
 
         // 가이드 질문
         guide_toggle: '💭 Hướng dẫn câu hỏi',
+        add_item: '+ Thêm mục',
 
         moment_guide_1: 'Khoảnh khắc tự hào nhất là khi nào?',
         moment_guide_2: 'Có trải nghiệm nào "Tôi đã làm được!"?',
@@ -402,10 +412,12 @@ const translations = {
         // 결과
         result_title: ' của tôi',
         result_subtitle: 'Ghi nhận lòng biết ơn',
+        template_select: '🎨 Lưu với mẫu',
         save_image: '📷 Lưu dạng ảnh',
         save_pdf: '📄 Lưu dạng PDF',
         backup_data: '💾 Sao lưu dữ liệu',
         import_data: '📂 Nhập dữ liệu',
+        storage_hint: '💡 Giảm ảnh hoặc sao lưu nếu thiếu dung lượng',
 
         // 메시지
         alert_name_required: 'Vui lòng nhập tên!',
