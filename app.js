@@ -192,11 +192,20 @@ function saveData() {
     }
 }
 
-// 안전한 데이터 저장 (레거시 - saveData() 사용 권장)
+// 안전한 데이터 저장 (성공/실패 반환)
 function saveDataSafe() {
-    // saveData()로 통합됨 - 호환성을 위해 유지
-    saveData();
-    return true; // 예외 발생 시 saveData()에서 처리
+    try {
+        const jsonData = JSON.stringify(appData);
+        localStorage.setItem('dorabom-data', jsonData);
+        return true; // 저장 성공
+    } catch (error) {
+        if (error.name === 'QuotaExceededError') {
+            console.error('저장 공간 부족:', error);
+        } else {
+            console.error('데이터 저장 중 오류:', error);
+        }
+        return false; // 저장 실패
+    }
 }
 
 // 저장 공간 사용량 확인
@@ -957,9 +966,35 @@ function importData() {
             try {
                 const importedData = JSON.parse(event.target.result);
 
-                // 데이터 구조 검증
-                if (!importedData.userName || !importedData.categories) {
-                    throw new Error('올바른 백업 파일이 아닙니다.');
+                // 데이터 구조 완전 검증
+                if (!importedData || typeof importedData !== 'object') {
+                    throw new Error('올바른 JSON 형식이 아닙니다.');
+                }
+
+                if (!importedData.userName || typeof importedData.userName !== 'string') {
+                    throw new Error('사용자 이름이 없거나 형식이 올바르지 않습니다.');
+                }
+
+                if (!importedData.categories || typeof importedData.categories !== 'object') {
+                    throw new Error('카테고리 데이터가 없거나 형식이 올바르지 않습니다.');
+                }
+
+                // 필수 카테고리 검증
+                const requiredCategories = ['moment', 'memory', 'person', 'favorite', 'future'];
+                for (const cat of requiredCategories) {
+                    if (!Array.isArray(importedData.categories[cat])) {
+                        throw new Error(`카테고리 '${cat}'의 형식이 올바르지 않습니다.`);
+                    }
+                }
+
+                // 편지 데이터 검증
+                if (!importedData.letter || typeof importedData.letter !== 'object') {
+                    throw new Error('편지 데이터가 없거나 형식이 올바르지 않습니다.');
+                }
+
+                // 이미지 배열 검증
+                if (!Array.isArray(importedData.images)) {
+                    throw new Error('이미지 데이터 형식이 올바르지 않습니다.');
                 }
 
                 if (confirm('불러온 데이터로 현재 데이터를 덮어쓰시겠어요?')) {
@@ -971,7 +1006,7 @@ function importData() {
                 }
             } catch (error) {
                 console.error('데이터 불러오기 실패:', error);
-                alert('파일을 읽는 중 오류가 발생했습니다.\n올바른 백업 파일인지 확인해주세요.');
+                alert('파일을 읽는 중 오류가 발생했습니다.\n' + error.message + '\n올바른 백업 파일인지 확인해주세요.');
             }
         };
         reader.readAsText(file);
