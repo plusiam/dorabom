@@ -982,54 +982,57 @@ function resetAll(event) {
         console.log('이벤트 전파 차단됨');
     }
 
-    const userConfirmed = confirm('정말 처음부터 다시 하시겠어요?\n모든 내용이 지워집니다.');
-    console.log('사용자 확인:', userConfirmed);
+    // setTimeout으로 확인 다이얼로그 표시 보장 (맥 크롬 호환성)
+    setTimeout(() => {
+        const userConfirmed = confirm('정말 처음부터 다시 하시겠어요?\n모든 내용이 지워집니다.');
+        console.log('사용자 확인:', userConfirmed);
 
-    if (userConfirmed) {
-        try {
-            // LocalStorage 완전 삭제
-            console.log('LocalStorage 삭제 시작');
-            localStorage.removeItem('dorabom-data');
-            console.log('LocalStorage 삭제 완료');
+        if (userConfirmed) {
+            try {
+                // LocalStorage 완전 삭제
+                console.log('LocalStorage 삭제 시작');
+                localStorage.removeItem('dorabom-data');
+                console.log('LocalStorage 삭제 완료');
 
-            // appData 초기화
-            appData = {
-                userName: '',
-                categories: {
-                    moment: [],
-                    memory: [],
-                    person: [],
-                    favorite: [],
-                    future: []
-                },
-                letter: {
-                    to: '',
-                    content: '',
-                    feeling: '',
-                    promise: ''
-                },
-                images: [],
-                completedCategories: []
-            };
-            console.log('appData 초기화 완료');
+                // appData 초기화
+                appData = {
+                    userName: '',
+                    categories: {
+                        moment: [],
+                        memory: [],
+                        person: [],
+                        favorite: [],
+                        future: []
+                    },
+                    letter: {
+                        to: '',
+                        content: '',
+                        feeling: '',
+                        promise: ''
+                    },
+                    images: [],
+                    completedCategories: []
+                };
+                console.log('appData 초기화 완료');
 
-            // 이름 입력 필드 초기화
-            const nameInput = document.getElementById('user-name');
-            if (nameInput) {
-                nameInput.value = '';
-                console.log('이름 입력 필드 초기화 완료');
+                // 이름 입력 필드 초기화
+                const nameInput = document.getElementById('user-name');
+                if (nameInput) {
+                    nameInput.value = '';
+                    console.log('이름 입력 필드 초기화 완료');
+                }
+
+                // 페이지 새로고침으로 완전 초기화
+                console.log('페이지 새로고침 시작');
+                window.location.reload();
+            } catch (error) {
+                console.error('초기화 중 오류 발생:', error);
+                alert('초기화 중 오류가 발생했습니다: ' + error.message);
             }
-
-            // 페이지 새로고침으로 완전 초기화
-            console.log('페이지 새로고침 시작');
-            window.location.reload();
-        } catch (error) {
-            console.error('초기화 중 오류 발생:', error);
-            alert('초기화 중 오류가 발생했습니다: ' + error.message);
+        } else {
+            console.log('사용자가 초기화를 취소했습니다');
         }
-    } else {
-        console.log('사용자가 초기화를 취소했습니다');
-    }
+    }, 100); // 100ms 지연으로 이벤트 루프 안정화
 }
 
 // ==================== 템플릿 시스템 ====================
