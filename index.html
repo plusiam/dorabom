@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="초등학교 6년간의 의미 있는 순간들을 돌아보고, 함께했던 사람들에게 감사의 마음을 전하는 웹앱">
-    <title>돌아봄 - 6학년 졸업 감사 리스트</title>
+    <meta name="description" content="지나온 시간의 의미 있는 순간들을 돌아보고, 함께했던 사람들에게 감사의 마음을 전하는 웹앱">
+    <title>돌아봄 - 감사와 회상의 기록</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
@@ -33,7 +33,7 @@
                 <div class="logo-area">
                     <span class="logo-icon">🎓</span>
                     <h1 class="app-title">돌아봄</h1>
-                    <p class="app-subtitle">초등학교 6년, 감사했던 순간들</p>
+                    <p class="app-subtitle">지나온 시간, 감사했던 순간들</p>
                 </div>
                 <div class="intro-text">
                     <p>버킷리스트가 <strong>앞으로 하고 싶은 것</strong>이라면,</p>
@@ -191,7 +191,7 @@
             <div class="container">
                 <div class="result-header">
                     <h2>🎉 <span id="result-name">친구</span>의 돌아봄</h2>
-                    <p>초등학교 6년간의 감사 기록</p>
+                    <p>지나온 시간의 감사 기록</p>
                 </div>
 
                 <div class="result-content" id="result-content">
@@ -199,8 +199,7 @@
                 </div>
 
                 <div class="result-actions">
-                    <button class="btn btn-primary" onclick="saveAsImage()">📷 이미지로 저장</button>
-                    <button class="btn btn-secondary" onclick="saveAsPDF()">📄 PDF로 저장</button>
+                    <button class="btn btn-primary" onclick="openTemplateGallery()">🎨 템플릿 선택하여 저장</button>
                     <button class="btn btn-outline" onclick="goToScreen('screen-hub')">✏️ 수정하기</button>
                 </div>
 
@@ -222,9 +221,96 @@
     <!-- 저장용 숨겨진 영역 -->
     <div id="capture-area" style="position: absolute; left: -9999px;"></div>
 
+    <!-- 템플릿 갤러리 모달 -->
+    <div id="template-gallery-modal" class="template-gallery-modal">
+        <div class="template-gallery-container">
+            <button class="template-close-btn" onclick="closeTemplateGallery()" aria-label="템플릿 갤러리 닫기">×</button>
+
+            <div class="template-gallery-header">
+                <h2>💝 나만의 돌아봄 디자인 선택하기</h2>
+                <p>마음에 드는 템플릿을 선택하고 미리보기를 확인하세요</p>
+            </div>
+
+            <div class="template-grid">
+                <!-- 클래식 레터 -->
+                <div class="template-card" data-template="classic" tabindex="0" onclick="selectTemplate('classic')">
+                    <div class="template-preview">💌</div>
+                    <h3>💌 클래식 레터</h3>
+                    <p>전통적인 손편지 스타일</p>
+                    <button class="template-select-btn" onclick="event.stopPropagation(); previewTemplate('classic')">미리보기</button>
+                </div>
+
+                <!-- 졸업 앨범 -->
+                <div class="template-card" data-template="album" tabindex="0" onclick="selectTemplate('album')">
+                    <div class="template-preview">📸</div>
+                    <h3>📸 졸업 앨범</h3>
+                    <p>추억 사진이 돋보이는 앨범</p>
+                    <button class="template-select-btn" onclick="event.stopPropagation(); previewTemplate('album')">미리보기</button>
+                </div>
+
+                <!-- 컬러풀 스토리북 -->
+                <div class="template-card" data-template="colorful" tabindex="0" onclick="selectTemplate('colorful')">
+                    <div class="template-preview">🌈</div>
+                    <h3>🌈 컬러풀 스토리북</h3>
+                    <p>밝고 경쾌한 동화책 스타일</p>
+                    <button class="template-select-btn" onclick="event.stopPropagation(); previewTemplate('colorful')">미리보기</button>
+                </div>
+
+                <!-- 미니멀 모던 -->
+                <div class="template-card" data-template="minimal" tabindex="0" onclick="selectTemplate('minimal')">
+                    <div class="template-preview">✨</div>
+                    <h3>✨ 미니멀 모던</h3>
+                    <p>깔끔하고 세련된 디자인</p>
+                    <button class="template-select-btn" onclick="event.stopPropagation(); previewTemplate('minimal')">미리보기</button>
+                </div>
+
+                <!-- 타임라인 스크랩북 -->
+                <div class="template-card" data-template="timeline" tabindex="0" onclick="selectTemplate('timeline')">
+                    <div class="template-preview">📍</div>
+                    <h3>📍 타임라인 스크랩북</h3>
+                    <p>시간순 스크랩북 스타일</p>
+                    <button class="template-select-btn" onclick="event.stopPropagation(); previewTemplate('timeline')">미리보기</button>
+                </div>
+
+                <!-- 페이퍼 아트 -->
+                <div class="template-card" data-template="paper" tabindex="0" onclick="selectTemplate('paper')">
+                    <div class="template-preview">🎨</div>
+                    <h3>🎨 페이퍼 아트</h3>
+                    <p>입체감 있는 종이 아트</p>
+                    <button class="template-select-btn" onclick="event.stopPropagation(); previewTemplate('paper')">미리보기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 템플릿 미리보기 모달 -->
+    <div id="template-preview-modal" class="template-preview-modal">
+        <div class="preview-container">
+            <button class="preview-close-btn" onclick="closePreviewModal()" aria-label="미리보기 닫기">×</button>
+            <div class="preview-area" id="preview-area">
+                <!-- 템플릿 미리보기가 여기에 표시됨 -->
+            </div>
+            <div class="preview-actions">
+                <button onclick="
+                    const templateId = document.getElementById('template-preview-modal').getAttribute('data-current-template');
+                    if (confirm('이미지로 저장하시겠습니까?')) {
+                        saveWithTemplate(templateId, 'image');
+                    }
+                ">📷 이미지로 저장</button>
+                <button onclick="
+                    const templateId = document.getElementById('template-preview-modal').getAttribute('data-current-template');
+                    if (confirm('PDF로 저장하시겠습니까?')) {
+                        saveWithTemplate(templateId, 'pdf');
+                    }
+                ">📄 PDF로 저장</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="i18n.js"></script>
+    <script src="templates.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

@@ -40,9 +40,9 @@ const categoryInfo = {
         icon: '📸',
         title: '소중한 추억',
         guides: [
-            '친구들과 가장 재미있었던 일은?',
-            '학교에서 있었던 잊지 못할 사건은?',
-            '수학여행/현장학습에서의 추억은?',
+            '함께한 사람들과 가장 재미있었던 일은?',
+            '잊지 못할 특별한 순간이 있나요?',
+            '여행이나 외출에서의 추억은?',
             '웃음이 나는 재미있는 에피소드는?'
         ]
     },
@@ -50,8 +50,8 @@ const categoryInfo = {
         icon: '💝',
         title: '고마웠던 사람',
         guides: [
-            '힘들 때 도와준 친구는 누구인가요?',
-            '기억에 남는 선생님은 누구인가요?',
+            '힘들 때 도와준 사람은 누구인가요?',
+            '기억에 남는 멘토나 동료가 있나요?',
             '언제나 응원해준 가족에게 고마운 점은?',
             '나를 믿어준 사람은 누구인가요?'
         ]
@@ -60,18 +60,18 @@ const categoryInfo = {
         icon: '🌟',
         title: '내가 좋아했던 것',
         guides: [
-            '가장 재미있었던 수업/과목은?',
-            '학교에서 좋아했던 장소는?',
-            '즐거웠던 동아리/방과후 활동은?',
-            '점심시간에 자주 했던 일은?'
+            '가장 재미있었던 활동이나 일은?',
+            '자주 찾았던 장소나 공간은?',
+            '즐거웠던 모임이나 취미 활동은?',
+            '여유 시간에 자주 했던 일은?'
         ]
     },
     future: {
         icon: '🌱',
         title: '앞으로의 다짐',
         guides: [
-            '중학교에 가서도 간직하고 싶은 것은?',
-            '계속 연락하고 싶은 친구는?',
+            '앞으로도 간직하고 싶은 것은?',
+            '계속 연락하고 싶은 사람은?',
             '새로운 환경에서 지키고 싶은 나의 모습은?',
             '미래의 나에게 해주고 싶은 말은?'
         ]
@@ -924,5 +924,160 @@ function resetAll() {
         };
         document.getElementById('user-name').value = '';
         goToScreen('screen-start');
+    }
+}
+
+// ==================== 템플릿 시스템 ====================
+// 템플릿 갤러리 열기
+function openTemplateGallery() {
+    const modal = document.getElementById('template-gallery-modal');
+    modal.classList.add('active');
+
+    // 접근성: 모달 열릴 때 첫 템플릿 카드에 포커스
+    setTimeout(() => {
+        const firstCard = modal.querySelector('.template-card');
+        if (firstCard) firstCard.focus();
+    }, 100);
+
+    // 스크린 리더 알림
+    announceToScreenReader('템플릿 선택 갤러리가 열렸습니다');
+}
+
+// 템플릿 갤러리 닫기
+function closeTemplateGallery() {
+    const modal = document.getElementById('template-gallery-modal');
+    modal.classList.remove('active');
+    announceToScreenReader('템플릿 선택 갤러리가 닫혔습니다');
+}
+
+// 템플릿 선택
+function selectTemplate(templateId) {
+    // 모든 카드에서 selected 클래스 제거
+    document.querySelectorAll('.template-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+
+    // 선택된 카드에 selected 클래스 추가
+    const selectedCard = document.querySelector(`[data-template="${templateId}"]`);
+    if (selectedCard) {
+        selectedCard.classList.add('selected');
+    }
+
+    // 현재 선택된 템플릿 저장
+    templateSystem.currentTemplate = templateId;
+
+    // 스크린 리더 알림
+    const templateInfo = templateSystem.templates[templateId];
+    announceToScreenReader(`${templateInfo.name} 템플릿이 선택되었습니다`);
+}
+
+// 템플릿 미리보기
+function previewTemplate(templateId) {
+    const modal = document.getElementById('template-preview-modal');
+    const previewArea = document.getElementById('preview-area');
+
+    // 템플릿 CSS 로드
+    templateSystem.loadTemplateCSS(templateId);
+
+    // 템플릿 HTML 생성
+    const html = templateSystem.renderTemplate(templateId, appData);
+    previewArea.innerHTML = html;
+
+    // 모달 표시
+    modal.classList.add('active');
+
+    // 현재 미리보기 중인 템플릿 저장
+    modal.setAttribute('data-current-template', templateId);
+
+    // 스크린 리더 알림
+    const templateInfo = templateSystem.templates[templateId];
+    announceToScreenReader(`${templateInfo.name} 템플릿 미리보기`);
+}
+
+// 미리보기 모달 닫기
+function closePreviewModal() {
+    const modal = document.getElementById('template-preview-modal');
+    modal.classList.remove('active');
+    announceToScreenReader('미리보기가 닫혔습니다');
+}
+
+// 템플릿으로 저장하기 (이미지)
+async function saveWithTemplate(templateId, format = 'image') {
+    const captureArea = document.getElementById('capture-area');
+    const template = templateSystem.templates[templateId];
+
+    // 템플릿 CSS 로드
+    templateSystem.loadTemplateCSS(templateId);
+
+    // 템플릿 HTML 생성
+    captureArea.innerHTML = templateSystem.renderTemplate(templateId, appData);
+    captureArea.style.left = '0';
+    captureArea.style.position = 'fixed';
+    captureArea.style.top = '0';
+    captureArea.style.zIndex = '-1';
+    captureArea.style.width = '900px';
+    captureArea.style.background = template.background;
+
+    // CSS 로드 대기
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    try {
+        if (format === 'image') {
+            // PNG로 저장
+            const canvas = await html2canvas(captureArea, {
+                scale: 3,
+                backgroundColor: template.background,
+                useCORS: true,
+                logging: false
+            });
+
+            const link = document.createElement('a');
+            link.download = `돌아봄_${appData.userName}_${templateId}_${getDateString()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+
+            announceToScreenReader('이미지로 저장되었습니다');
+        } else if (format === 'pdf') {
+            // PDF로 저장
+            const canvas = await html2canvas(captureArea, {
+                scale: 3,
+                backgroundColor: template.background,
+                useCORS: true,
+                logging: false
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const { jsPDF } = window.jspdf;
+
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight) * 0.9;
+
+            const finalWidth = imgWidth * ratio;
+            const finalHeight = imgHeight * ratio;
+            const x = (pdfWidth - finalWidth) / 2;
+            const y = 10;
+
+            pdf.addImage(imgData, 'PNG', x, y, finalWidth, finalHeight);
+            pdf.save(`돌아봄_${appData.userName}_${templateId}_${getDateString()}.pdf`);
+
+            announceToScreenReader('PDF로 저장되었습니다');
+        }
+
+        // 갤러리 닫기
+        closeTemplateGallery();
+        closePreviewModal();
+
+    } catch (error) {
+        console.error('저장 실패:', error);
+        alert('저장에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+        captureArea.style.left = '-9999px';
+        captureArea.style.position = 'absolute';
+        captureArea.style.width = '800px';
     }
 }
