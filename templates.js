@@ -382,12 +382,17 @@ const templateSystem = {
             `;
         }
 
+        // 동적 연도 계산 (초등학교 6년: 현재년도 - 6 ~ 현재년도)
+        const currentYear = new Date().getFullYear();
+        const startYear = currentYear - 6;
+        const yearRange = `${startYear}—${currentYear}`;
+
         return `
             <div class="template-minimal">
                 <header class="minimal-header">
                     <h1 class="minimal-main-title">${escapeHtml(data.userName)}</h1>
                     <div class="minimal-divider"></div>
-                    <p class="minimal-subtitle">REFLECTION · 2019—2025</p>
+                    <p class="minimal-subtitle">REFLECTION · ${yearRange}</p>
                 </header>
                 ${sectionsHTML}
                 ${imagesHTML}

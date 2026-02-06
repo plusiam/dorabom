@@ -309,13 +309,14 @@ function updateDisplayName() {
 function updateHubUI() {
     updateDisplayName();
 
-    // 각 카테고리 완료 상태 표시
+    // 각 카테고리 완료 상태 표시 (빈 항목 제외)
     const categories = ['moment', 'memory', 'person', 'favorite', 'future'];
     let completedCount = 0;
 
     categories.forEach(cat => {
         const card = document.querySelector(`[data-category="${cat}"]`);
-        const isCompleted = appData.categories[cat].length > 0;
+        // 실제 내용이 있는 항목만 완료로 인정
+        const isCompleted = appData.categories[cat].some(item => item.trim());
 
         if (isCompleted) {
             card.classList.add('completed');
