@@ -983,7 +983,10 @@ function importData() {
 // 모든 데이터 초기화
 function resetAll() {
     if (confirm('정말 처음부터 다시 하시겠어요?\n모든 내용이 지워집니다.')) {
+        // LocalStorage 완전 삭제
         localStorage.removeItem('dorabom-data');
+
+        // appData 초기화
         appData = {
             userName: '',
             categories: {
@@ -1002,8 +1005,15 @@ function resetAll() {
             images: [],
             completedCategories: []
         };
-        document.getElementById('user-name').value = '';
-        goToScreen('screen-start');
+
+        // 이름 입력 필드 초기화
+        const nameInput = document.getElementById('user-name');
+        if (nameInput) {
+            nameInput.value = '';
+        }
+
+        // 페이지 새로고침으로 완전 초기화
+        window.location.reload();
     }
 }
 
